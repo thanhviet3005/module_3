@@ -107,7 +107,103 @@ IDhopDongChiTiet int,
 IDhopdong int,
 IDdichvudikem int, 
 soluong int,
-primary key (IDhopDongChiTiet),
 foreign key (IDhopdong) references hopdong(IDhopdong),
-foreign key (IDdichvudikem) references dichvudikem(IDdichvudikem)
+foreign key (IDdichvudikem) references dichvudikem(IDdichvudikem),
+primary key (IDhopDongChiTiet)
 );
+
+-- nhap du lieu vao database
+
+insert into bophan
+value	
+	(1, "Sale - Marketing"),
+	(2, "Hành Chính"),
+	(3, "Phục vụ"),
+	(4, "Quản lý")
+	;
+insert into trinhdo
+value 	
+	(1, "Trung cấp"),
+	(2, "Cao đẳng"),
+	(3, "Đại học"),
+	(4, "Sau đại học")
+    ;
+insert into vitri
+value 
+	(1, "Lễ tân"),
+	(2, "Phục vụ"),
+	(3, "Chuyên viên"),
+	(4, "Giám sát"),
+	(5, "Giám đốc")    
+    ;
+insert into nhanvien
+value
+	(1, "Tran Manh", 2, 2, 3, 2001-02-10, "986532147", "986574132", "manh@gmail.com", "Vung Tau"),
+    (2, "Hoang Linh", 3, 3, 2, 2000-03-12, "987532147", "326574132", "linh@gmail.com", "Phu Tho"),
+    (3, "Hoang Nguyen", 1, 1, 1, 1992-06-19, "857532147", "326574168", "nguyen@gmail.com.vn", "Lam Dong"),
+    (4, "The Vinh", 5, 4, 4, 1980-11-26, "85758246", "561574168", "vinh@gmail.com", "Ca Mau")
+    ;
+-- +++++++++++++++++++++++++++    
+insert into loaikhach
+value 
+	(1, "Diamond"),
+    (2, "Platinium"),
+    (3, "Gold"),
+    (4, "Silver"),
+    (5, "Member")    
+    ;
+insert into khachhang
+value 
+	(1, 2, "Andrew", 1981-10-26, "85758158", "09635441254885", "andrew@gmail.com", "Quang Tri"),
+    (2, 5, "Peter", 1990-05-12, "55158158", "09639651254811", "peter@gmail.com", "Poland"),
+    (3, 1, "Alice", 1985-03-11, "55158192", "096396512548718", "alice@gmail.com", "Da Nang"),
+    (4, 4, "Cruise", 1989-09-18, "55158126", "09639651254246", "Cruise@gmail.com", "France")
+    ;    
+    
+-- +++++++++++++++++++++++++++
+insert into kieuthue
+value 
+	(1, "nam"),
+    (2, "thang"),
+    (3, "ngay"),
+    (4, "gio")
+    ;
+insert into loaidichvu
+value 
+	(1, "villa"),
+    (2, "house"),
+    (3, "room")
+    ;
+insert into dichvu
+value 
+	(1, "villa", 200, 4, 15, 150, 1, 1),
+    (2, "room", 100, 1, 3, 50, 3, 3),
+    (3, "house", 250, 2, 16, 100, 2, 2),
+    (4, "villa", 160, 6, 12, 300, 3, 1)
+    ;
+    
+-- +++++++++++++++++++++++++++
+insert into dichvudikem
+value 
+	(1, "massage", 50, 1, "on" ),
+	(2, "karaoke", 30, 1, "off" ),
+	(3, "thức ăn", 10, 1, "on" ),
+	(4, "nước uống", 5, 1, "on" ),
+    (5, "thuê xe tham quan", 80, 1, "on" )
+    ;
+insert into hopdongchitiet
+value 
+	(1, 1, 3, 8),
+    (2, 3, 5, 15),
+    (3, 2, 4, 9),
+    (4, 4, 2, 12)
+    ;
+insert into hopdong
+value 
+	(1, 1, 1, 3, 2019-08-15, 2019-11-2, 200, 1600),
+    (2, 4, 3, 1, 2019-06-09, 2019-10-14, 100, 2400),
+    (3, 2, 2, 2, 2019-10-06, 2019-12-11, 150, 3700),
+    (4, 3, 4, 1, 2019-10-06, 2019-12-11, 150, 3700)
+    ;
+
+
