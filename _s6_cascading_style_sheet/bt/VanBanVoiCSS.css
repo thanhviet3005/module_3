@@ -1,0 +1,15 @@
+h1{
+    text-transform: capitalize;
+}
+span{
+    color: blue;
+}
+
+div{
+    font-family: "Times New Roman";
+    text-indent: 1cm;
+    text-align: justify;
+    font-size: 4mm;
+    word-break: break-word;
+    max-width: 50%;
+}

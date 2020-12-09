@@ -37,14 +37,15 @@ tendichvu varchar(45),
 dientich int,
 sotang int,
 soNguoiToiDa varchar(45),
-chiPhiThue varchar(45),
+chiPhiThue int,
 IDkieuthue int(45),
 IDloaidichvu int,
 foreign key (IDkieuthue) references kieuthue(IDkieuthue),
 foreign key (IDloaidichvu) references loaiDichVu(IDloaidichvu),
 primary key (IDdichvu)
 );
-
+-- alter table dichvu
+-- modify chiPhiThue int;
 
 create table vitri(
 IDvitri int,
@@ -194,6 +195,7 @@ value
     (2, "business"),
     (3, "normal")
     ;
+
 update  loaidichvu
 set `tenLoaiDichVu` = "normal"
 where `IDloaidichvu` = 3
@@ -205,8 +207,10 @@ insert into dichvu
 value 
 	(1, "villa", 200, 4, 15, 150, 1, 1),
     (2, "room", 100, 1, 3, 50, 3, 3),
-    (3, "house", 250, 2, 16, 100, 2, 2),
-    (4, "villa", 160, 6, 12, 300, 3, 1)
+    (3, "house", 250, 2, 16, 100, 2, 3),
+    (4, "villa", 160, 6, 12, 300, 3, 1),
+	(5, "room", 80, 1, 15, 150, 1, 1),
+	(6, "villa", 180, 5, 12, 300, 3, 2)
     ;
 select * from dichvu;
 
@@ -227,10 +231,25 @@ value
 	(1, 1, 3, 8),
     (2, 3, 5, 15),
     (3, 2, 4, 9),
-    (4, 4, 2, 12)
+    (4, 4, 2, 12),
+	(6, 7, 2, 3),
+    (7, 6, 1, 4),
+    (8, 9, 3, 12),
+    (9, 8, 5, 6),
+    (10, 10, 4, 5),
+    (11, 11, 5, 2)
     ;
 select * from dichvudikem;
 
+-- insert into hopdongchitiet
+-- value 
+-- 	(6, 7, 2, 3),
+--     (7, 6, 1, 4),
+--     (8, 9, 3, 12),
+--     (9, 8, 5, 6),
+--     (10, 10, 4, 5),
+--     (11, 11, 5, 2)
+--     ;
 -- +++++++++++++++++++++++++++
 insert into hopdong
 value 
@@ -238,8 +257,87 @@ value
     (2, 4, 3, 1, '2019-06-09', '2019-10-14', 100, 2400),
     (3, 2, 2, 2, '2019-10-06', '2019-12-11', 150, 3700),
     (6, 5, 5, 3, '2018-10-06', '2018-12-12', 200, 1600),        
-    (4, 3, 4, 1, '2019-10-06', '2019-12-11', 150, 3700)
+    (4, 3, 4, 1, '2019-10-06', '2019-12-11', 150, 3700),
+	(7, 2, 3, 2, '2020-02-06', '2019-02-11', 150, 300),
+	(8, 2, 3, 3, '2020-03-02', '2020-03-05', 200, 250),
+    (9, 5, 4, 3, '2019-02-06', '2019-02-12', 200, 300),    
+	(10, 5, 4, 5, '2018-02-15', '2018-02-18', 200, 300),      
+	(11, 5, 4, 6, '2017-02-20', '2017-02-22', 200, 300)       
     ;
 select * from hopdong;
+-- update hopdong
+-- set ngaylamhopdong = '2018-02-15', ngayketthuc = '2018-02-18'
+-- where IDhopdong = 10
+-- ;
 
 -- +++++++++++++++++++++++++++
+-- TASK 2: Hiển thị thông tin của tất cả nhân viên có trong hệ thống có tên bắt 
+-- đầu là một trong các ký tự “H”, “T” hoặc “K” và có tối đa 15 ký tự.
+select * from `nhanvien`
+where length(hoten) <= 15 and ( hoten like 'H%' or 'K%' or 'T')
+;
+select * from `nhanvien`;
+
+-- +++++++++++++++++++++++++++
+-- TASK 3: Hiển thị thông tin của tất cả khách hàng có độ tuổi từ 18 đến 50 tuổi và 
+-- có địa chỉ ở “Đà Nẵng” hoặc “Quảng Trị”.
+select * from `khachhang`
+where  ( diachi = "Quang Tri" or diachi = "Da Nang" )
+and (year(ngaysinh) between ( year(now()) - 50) and year(now()) - 18 ) 
+;
+
+-- +++++++++++++++++++++++++++
+-- TASK 4: Đếm xem tương ứng với mỗi khách hàng đã
+-- từng đặt phòng bao nhiêu lần.  
+-- Kết quả hiển thị được sắp xếp tăng dần theo số lần đặt phòng của khách hàng. 
+-- Chỉ đếm những khách hàng nào có Tên loại khách hàng là "Diamond".
+select `khachhang`.`hoten`, `loaikhach`.`tenloaikhach`, `khachhang`.`IDloaikhach`, count(`hopdong`.`IDhopdong`) as solandatphong
+from `khachhang` inner join `hopdong` on `khachhang`.`IDkhachhang` = `hopdong`.`IDkhachhang`
+				inner join `loaikhach` on `khachhang`.`IDloaikhach` = `loaikhach`.`IDloaikhach`
+where `tenLoaikhach` = "Diamond" 
+group by `khachhang`.`hoten`    	
+order by solandatphong asc
+;
+
+-- +++++++++++++++++++++++++++
+-- TASK 5: Hiển thị IDKhachHang, HoTen, TenLoaiKhach, IDHopDong, TenDichVu, NgayLamHopDong, NgayKetThuc, TongTien 
+-- (Với TongTien được tính theo công thức như sau: ChiPhiThue + SoLuong*Gia, với SoLuong và Giá là từ bảng DichVuDiKem)
+-- cho tất cả các Khách hàng đã từng đặt phỏng. (Những Khách hàng nào chưa từng đặt phòng cũng phải hiển thị ra).
+
+select `khachhang`.IDkhachhang, `khachhang`.hoten, 
+	`loaikhach`.tenLoaikhach,
+    `dichvu`.tendichvu,
+	`hopdong`.IDhopdong, `hopdong`.ngaylamhopdong, `hopdong`.ngayketthuc,
+    (`dichvu`.chiPhiThue + `hopdongchitiet`.soluong * `dichvudikem`.gia) as tongtien    
+from `khachhang`
+	left join `loaikhach` on `khachhang`.IDloaiKhach = `loaikhach`.IDloaiKhach
+	left join `hopdong` on `khachhang`.IDkhachhang = `hopdong`.IDkhachhang
+	left join `dichvu` on `hopdong`.IDdichvu = `dichvu`.IDdichvu
+	left join `hopdongchitiet` on `hopdong`.IDhopdong = `hopdongchitiet`.IDhopdong
+    left join `dichvudikem` 	on `hopdongchitiet`.IDdichvudikem = `dichvudikem`.IDdichvudikem
+group by `khachhang`.IDkhachhang
+    ;
+select * from `dichvudikem`;
+
+-- +++++++++++++++++++++++++++
+-- TASK 6: Hiển thị IDDichVu, TenDichVu, DienTich, ChiPhiThue, TenLoaiDichVu của tất cả các loại Dịch vụ 
+-- chưa từng được Khách hàng thực hiện đặt từ quý 1 của năm 2019 (Quý 1 là tháng 1, 2, 3).
+-- 1. hien ra tat ca cac loai dich vu gom villa vip, villa bussiness, villa normal, house, room tuong tu
+-- trong hop dong trong moi khoang thoi gian tu 2019 -2020
+-- 2. hien ra tat ca cac loai dich vu chua xuat hien trong nam 2019 -2020
+
+select
+   	`hopdong`.IDhopdong , `hopdong`.ngaylamhopdong, `hopdong`.ngayketthuc,
+	`dichvu`.IDdichvu, `dichvu`.tendichvu , `dichvu`.dientich, `dichvu`.chiPhiThue,
+	`hopdongchitiet`.IDhopDongChiTiet, `dichvudikem`.tendichvudikem
+from `hopdong`
+	left join `dichvu` on `hopdong`.IDdichvu = `dichvu`.IDdichvu   
+	-- dang lam toi hien ra nhung cot ma co join lai de lam cot ben ngoai, cot ben trong where chua lam
+where(
+	year(`hopdong`.ngaylamhopdong) between 2019 and 2020
+    and `dichvu`.tendichvu = 'house' and `loaidichvu`.tenLoaiDichVu = 'business'
+	)
+
+
+;
+select * from `dichvudikem`;
