@@ -1,0 +1,24 @@
+body{
+    margin:0 auto;
+    font-family: Arial, Tahoma;
+}
+#s-body{
+    float: left;
+}
+#head, #head-link, #s-body, #footer{
+    width: 100%;
+    margin-bottom:5px;
+    clear: both;
+}
+
+/* chinh do co gian cua man hinh */
+@media screen and (min-width: 540px){
+    body{
+        background-color: yellow;
+    }
+}
+@media screen and (min-width: 1200px){
+    body{
+        background-color: orange;
+    }
+}
