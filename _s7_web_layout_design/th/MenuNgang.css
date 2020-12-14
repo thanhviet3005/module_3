@@ -1,0 +1,18 @@
+body{
+    font-family: Arial, Tahoma;
+}
+/*
+Tiếp theo, chúng ta tạo ba bộ chọn sau đây để cố định phông chữ cho trang HTML và đặt phân
+vùng cho trình đơn (chiều cao, đường viền, khoảng cách và màu nền.
+*/
+#menu {
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    background-color: lightsteelblue;
+    border: 1px solid #CDCDCD;
+}
+#menu ul, li{
+    padding: 0;
+    margin: 0;
+}
