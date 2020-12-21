@@ -56,7 +56,7 @@ public class UserDAO implements IUserDAO {
     }
 
     //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_
-    private void printSQLException(SQLException e) {
+    private void printSQLException(SQLException ex) {
         for(Throwable e: ex){                                       //???
             if(e instanceof SQLException) {
                 e.printStackTrace(System.err);
@@ -69,7 +69,6 @@ public class UserDAO implements IUserDAO {
                     t = t.getCause();
                 }
             }
-
         }
 
     }
@@ -100,7 +99,7 @@ public class UserDAO implements IUserDAO {
         return  user;
     }
 
-    //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_
+    //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
     @Override
     public List<User> selectAllUser() {
         // using try-with-resources to avoid closing resources (boiler plate code)
@@ -128,28 +127,37 @@ public class UserDAO implements IUserDAO {
         return users;
     }
 
-    //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_
+    //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
     @Override
     public boolean deleteUser(int id) throws SQLException {
         boolean rowDeleted;
         try(
             Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER);
-
+            PreparedStatement statement = connection.prepareStatement(DELETE_USER);
         ){
-
-        }catch(SQLException e){
-            printSQLException(e);
+            statement.setInt(1,id);    //???
+            rowDeleted = statement.executeUpdate()>0;
         }
-
-
-
-        return false;
+        return rowDeleted;
     }
+
     //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_
     @Override
     public boolean updateUser(User user) throws SQLException {
-        return false;
+        boolean rowUpdated;
+        try(
+                Connection connection = getConnection();
+                PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);
+        ){
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getCountry());
+            statement.setInt(4, user.getId());
+
+            rowUpdated = statement.executeUpdate() > 0;
+        }
+        return rowUpdated;
     }
+
     //+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_
 }
