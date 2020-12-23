@@ -1,0 +1,74 @@
+Bước 1: Định nghĩa Stored Procedures get_user_by_id và insert_user trong MySql cho cơ sở dữ liệu demo:
+
+delimiter $$
+create procedure get_user_by_id(in user_id int) 
+begin
+	select id, `name`, age, gender, email, country
+    from users 
+    where id = user_id;
+end$$
+delimiter ;
+
+//__+__+__+__+__+__+__+__+__+__+__+__+
+
+delimiter $$
+create procedure insertUser(
+in user_name varchar(120),
+in user_age int,
+in user_gender varchar(50),
+in user_email varchar(220),
+in user_country varchar(120)
+)
+begin
+	insert into users
+    values(user_name, user_age, user_gender, user_email, user_country);
+end$$
+delimiter ;
+
+public User selectById(int id){
+        User user = null;
+        String name;
+        int age;
+        String gender;
+        String email;
+        String country;
+        String query = "{CALL get_user_by_id(?)}";
+        try(Connection connection = getConnection();
+            CallableStatement callableStatement = connection.prepareCall(query);
+        ){
+            callableStatement.setInt(1, id);
+            System.out.println("__+__+__+__"+ callableStatement);
+            ResultSet rs = callableStatement.executeQuery();
+            while (rs.next()){
+                name = rs.getString("name");
+                age = rs.getInt("age");
+                gender = rs.getString("gender");
+                email = rs.getString("email");
+                country = rs.getString("country");
+                user = new User(id, name, age, gender, email, country);
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+
+        return user;
+    }
+
+//__+__+__+__+__+__+__+__+__+__+__+__+
+Gọi các thủ tục store_procedure từ  java Intellij
+public void insertUser(User user){
+//        String query = "{call insertUser(?,?,?,?,?)}";
+        try(Connection connection = getConnection();
+            CallableStatement callableStatement = connection.prepareCall(INSERT_USER_SQL)
+        ){
+            callableStatement.setString(1, user.getName());
+            callableStatement.setInt(2, user.getAge());
+            callableStatement.setString(3, user.getGender());
+            callableStatement.setString(4, user.getEmail());
+            callableStatement.setString(5, user.getCountry());
+            System.out.println("__+__+__+__+__ "+ callableStatement);
+            callableStatement.executeUpdate();
+        }catch (SQLException e){
+        printSQLException(e);
+        }
+    }
