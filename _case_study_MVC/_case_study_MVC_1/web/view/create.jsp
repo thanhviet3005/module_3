@@ -24,7 +24,14 @@
             </div>
             <div class="form-group">
                 <label>Type id</label>
-                <input type="text" name="typeId" class="form-control">
+<%--                <input type="text" name="typeId" class="form-control">--%>
+                <select name="typeId" class="custom-select" id="inputGroupSelect01">
+                    <c:forEach var="cusType" items="${customerTypeList}">
+                        <option value="${cusType.getId()}">
+                            <c:out value="${cusType.getCusTypeName()}"/>
+                        </option>
+                    </c:forEach>
+                </select>
             </div>
             <div class="form-group">
                 <label>Name</label>
@@ -39,11 +46,17 @@
                 <input type="text" name="gender" class="form-control">
             </div>
             <div class="form-group">
-                <label>Id card</label>
+                <label>Id card</label><br>
+                <small style="margin-left: 16%; font-size: 100%; color: blue">
+                    <c:if test="${massageIdCard != null}"> ${massageIdCard} </c:if>
+                </small>
                 <input type="text" name="idCard" class="form-control">
             </div>
             <div class="form-group">
-                <label>Phone</label>
+                <label>Phone</label><br>
+                <small style="margin-left: 16%; font-size: 100%; color: blue">
+                    <c:if test="${massagePhone != null}"> ${massagePhone} </c:if>
+                </small>
                 <input type="text" name="phone" class="form-control">
             </div>
             <div class="form-group">

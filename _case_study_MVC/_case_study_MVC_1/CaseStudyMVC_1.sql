@@ -1,4 +1,5 @@
-create database CaseStudyMVC;
+-- drop database CaseStudyMVC;
+-- create database CaseStudyMVC;
 
 use CaseStudyMVC;
 
@@ -17,6 +18,7 @@ value
     (4, "Silver"),
     (5, "Member")
 ;
+-- select * from customer_type;
 -- drop table customer;
 create table customer(
 	customer_id int,
@@ -149,14 +151,15 @@ create table service_type(
 	service_type_name varchar(255), 
     primary key (service_type_id)
 );
+
 -- select * from `service_type`;
 insert into `service_type`
 value
- 	(1, "vip"),
- 	(2, "bussiness"),
- 	(3, "popular"),
- 	(4, "government")
+ 	(1, "villa"),
+ 	(2, "house"),
+ 	(3, "room")
 ;
+
 
 create table service(
 	service_id int,
@@ -202,11 +205,11 @@ create table contract(
 	contract_deposition double,
 	contract_total_money double,
 	employee_id int,
-    foreign key (employee_id) references employee(employee_id) on update cascade on delete cascade,
+    foreign key (employee_id) references employee(employee_id),
 	customer_id int,
-    foreign key (customer_id) references customer(customer_id) on update cascade on delete cascade,
+    foreign key (customer_id) references customer(customer_id),
 	service_id int,
-    foreign key (service_id) references service(service_id) on update cascade on delete cascade,
+    foreign key (service_id) references service(service_id),
     primary key(contract_id)
 );
 
@@ -224,28 +227,39 @@ use demo2;
 
 -- __+__+__+__+__+__+__+__+__+__+__+__+__+__
 -- Cac phuong thuc C-R-U-D
-
+-- drop procedure getAllCustomer;
 delimiter $$
 create procedure getAllCustomer() 
 begin
-	select * from customer ;
+	select customer_id, customer_type.customer_type_id, customer_type_name, customer_name, customer_birthday,
+		customer_gender, customer_id_card, customer_phone, customer_email, customer_address
+    from customer 
+    join customer_type on customer.customer_type_id = customer_type.customer_type_id;
 end$$
 delimiter ;
-
--- select * from customer;
+-- call getAllCustomer
 
 -- __+__+__+__+
+-- drop procedure getCustomerById;
 delimiter $$
 create procedure getCustomerById(in id int) 
 begin
-	select * from customer 
+	select customer_id, customer.customer_type_id, customer_type_name, customer_name, customer_birthday,
+		customer_gender, customer_id_card, customer_phone, customer_email, customer_address
+    from customer 
+    join customer_type on customer.customer_type_id = customer_type.customer_type_id
     where customer_id = id;
 end$$
 delimiter ;
+-- call getCustomerById(2)
 
 insert into customer
 value (1, 1, "Giang", "1980-06-15", "female", "876544565", "0725631525","giang@gmail.com","Quang Ngai")
 ;
+-- update customer
+-- set customer_email = "linh18@gmail.com"
+-- where customer_id = 3
+-- ;
 call getAllCustomer
 -- __+__+__+__+
 delimiter $$
@@ -305,4 +319,216 @@ begin
 end$$
 delimiter ;
 
-select * from customer;
+-- __+__+__+__+
+delimiter $$
+create procedure searchCustomerByName(in `name` VARCHAR(255)) 
+begin
+	select customer_id, customer_type.customer_type_id, customer_type_name, customer_name, customer_birthday,
+		customer_gender, customer_id_card, customer_phone, customer_email, customer_address
+    from customer 
+    join customer_type on customer.customer_type_id = customer_type.customer_type_id
+    WHERE customer_name LIKE concat('%',`name` ,'%') ;
+end$$
+delimiter ;
+-- call searchCustomerByName("m")
+
+-- __+__+__+__+
+-- DROP PROCEDURE getAllCustomerType;
+delimiter $$
+create procedure getAllCustomerType() 
+begin
+	select customer_type_id, customer_type_name  from customer_type;
+end$$
+delimiter ;
+call getAllCustomerType
+
+-- __+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+__+
+-- PROCEDURE EMPLOYEE 
+
+delimiter $$
+create procedure getAllPosition() 
+begin
+	select position_id, position_name     
+    from position;
+end$$
+delimiter ;
+-- call getAllPosition
+
+ -- __+__+__+__+__+
+ delimiter $$
+create procedure getAllDegree() 
+begin
+	select education_degree_id, education_degree_name
+    from education_degree;
+end$$
+delimiter ;
+-- call getAllDegree
+
+ -- __+__+__+__+__+
+  delimiter $$
+create procedure getAllDivision() 
+begin
+	select division_id, division_name
+    from division;
+end$$
+delimiter ;
+-- call getAllDivision
+
+
+ -- __+__+__+__+__+
+--  drop procedure getAllUser;
+
+  delimiter $$
+create procedure getAllUser() 
+begin
+	select userName, `passWord`
+    from `user`;
+end$$
+delimiter ;
+-- call getAllUser
+
+ -- __+__+__+__+__+
+delimiter $$
+create procedure getAllEmployee() 
+begin
+	select employee_id, employee_name, employee_birthday, employee_id_card, employee_salary
+		, employee_phone, employee_email, employee_address
+        , position.position_name, education_degree.education_degree_name, division.division_name
+        , userName
+    from employee 
+    join `position` on employee.position_id = `position`.position_id
+    join division on employee.division_id = division.division_id
+    join education_degree on employee.education_degree_id = education_degree.education_degree_id
+    ;
+end$$
+delimiter ;
+-- insert into employee
+-- value (1, "John", "1995-11-14", "869745326", 500, "0772963532", "john@furama.com", "Brazil", 2, 2, 2, "David");
+-- call getAllEmployee
+
+-- __+__+__+__+
+-- drop procedure getEmployeeById;
+delimiter $$
+create procedure getEmployeeById(in id int) 
+begin
+	select 
+    employee_id
+    , employee_name
+    , employee_birthday
+    , employee_id_card
+    , employee_salary
+	, employee_phone
+    , employee_email
+    , employee_address
+	, position.position_name
+    , education_degree.education_degree_name
+    , division.division_name
+	, userName
+    from employee 
+		join `position` on employee.position_id = `position`.position_id
+		join division on employee.division_id = division.division_id
+		join education_degree on employee.education_degree_id = education_degree.education_degree_id
+    where employee_id = id;
+end$$
+delimiter ;
+-- call getCustomerById(2)
+
+-- __+__+__+__+
+-- drop procedure insertEmployee;
+delimiter $$
+create procedure insertEmployee(
+	in employee_id int,
+    in employee_name varchar(45),
+    in employee_birthday date,
+    in employee_id_card varchar(45),
+    in employee_salary double,
+    in employee_phone varchar(45),
+    in employee_email varchar(45),
+    in employee_address varchar(45),
+    in position_id int,
+    in education_degree_id int,
+    in division_id int,
+    in userName varchar(255)
+)
+begin
+	insert into employee
+    values 
+		(employee_id
+        , employee_name
+        , employee_birthday
+        , employee_id_card
+        , employee_salary
+        , employee_phone
+        , employee_email
+        , employee_address
+        , position_id
+        , education_degree_id
+        , division_id
+        , userName)
+	;
+end$$
+delimiter ;
+
+-- __+__+__+__+
+-- drop procedure updateEmployee
+delimiter $$
+create procedure updateEmployee(
+	in id int,
+    in `name` varchar(45),
+    in birthday date,
+    in id_card varchar(45),
+    in salary double,
+    in phone varchar(45),
+    in email varchar(45),
+    in address varchar(45),
+    in pos_id int,
+    in edu_degree_id int,
+    in div_id int,
+    in uName varchar(255)
+)
+begin
+	update employee
+    set 
+-- 		employee_id = _id,
+        employee_name = `name`,
+        employee_birthday = birthday,
+        employee_id_card = id_card,
+        employee_salary = salary,
+        employee_phone = phone,
+        employee_email = email,
+        employee_address = address,
+        position_id = pos_id,
+        education_degree_id = edu_degree_id,
+        division_id = div_id,
+        userName = uName        
+	where employee_id = id;
+end$$
+delimiter ;
+
+-- __+__+__+__+
+-- DROP PROCEDURE deleteEmployeeById;
+delimiter $$
+create procedure deleteEmployeeById(in id int) 
+begin
+	delete from employee
+    where employee_id = id;
+end$$
+delimiter ;
+-- call getAllEmployee
+
+-- __+__+__+__+
+delimiter $$
+create procedure searchByName(in `name` VARCHAR(255)) 
+begin
+	select employee_id, employee_name, employee_birthday, employee_id_card, employee_salary
+		, employee_phone, employee_email, employee_address
+        , position.position_name, education_degree.education_degree_name, division.division_name
+        , userName
+    from employee 
+    join `position` on employee.position_id = `position`.position_id
+    join division on employee.division_id = division.division_id
+    join education_degree on employee.education_degree_id = education_degree.education_degree_id
+    WHERE employee_name LIKE concat('%',`name` ,'%') ;
+end$$
+delimiter ;
+-- call searchByName("Serena")

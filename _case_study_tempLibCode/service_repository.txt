@@ -1,0 +1,48 @@
+
+    public List<ServiceModel> returnListService(String statementCallProcedure){
+        List<ServiceModel> serviceModelList = new ArrayList<>();
+        try(Connection connection = Lib.getConnection();
+            CallableStatement callableStatement = connection.prepareCall(statementCallProcedure)
+        ){
+            System.out.println(callableStatement);
+            ResultSet rs = callableStatement.executeQuery();
+            int serviceId;
+            String serviceName;
+            int serviceArea;
+            double serviceCost;
+            int serviceMaxPeople;
+            String rentTypeName;
+            double rentTypeCost;
+            String serviceTypeName;
+            String standardRoom;
+            String otherConvenient;
+            double poolArea;
+            int numberOfFloor;
+
+            ServiceModel serviceModel;
+            while (rs.next()){
+                serviceId = rs.getInt("service_id");
+                serviceName = rs.getString("service_name");
+                serviceArea = rs.getInt("service_area");
+                serviceCost = rs.getDouble("service_cost");
+                serviceMaxPeople = rs.getInt("service_max_people");
+                rentTypeName = rs.getString("rent_type_name");
+                rentTypeCost = rs.getDouble("rent_type_cost");
+                serviceTypeName = rs.getString("service_type_name");
+                standardRoom = rs.getString("standard_room");
+                otherConvenient = rs.getString("description_other_convenient");
+                poolArea = rs.getDouble("pool_area");
+                numberOfFloor = rs.getInt("number_of_floors");
+
+                serviceModel = new ServiceModel(serviceId, serviceName, serviceArea, serviceCost
+                        , serviceMaxPeople, rentTypeName, rentTypeCost, serviceTypeName
+                        , standardRoom, otherConvenient, poolArea, numberOfFloor);
+
+                serviceModelList.add(serviceModel);
+            }
+        }catch (SQLException e){
+            System.out.println("method= returnListService, occur error= SQLException ");
+            e.printStackTrace();
+        }
+        return serviceModelList;
+    }
